@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ps -eo pcpu,cmd|awk '$2~/^oracle/{data[$2]+=$1}END{for (i in data) print strftime("%Y-%m-%d:%T"),i,data[i]}
+

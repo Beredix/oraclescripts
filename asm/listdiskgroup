@@ -1,0 +1,21 @@
+#!/bin/bash
+export ORACLE_SID=+ASM1
+sqlplus -S "/ as sysdba" <<EOF
+set pages 999
+set linesize 200
+set termout off
+set newpage 0
+column disk_group_name format a15
+column disk_file_path format a40
+column disk_file_name format a20
+column disk_file_fail_group format a20
+SELECT
+    NVL(a.name, '[CANDIDATE]')      disk_group_name
+  , b.path                          disk_file_path
+  , b.name                          disk_file_name
+  , b.failgroup                     disk_file_fail_group
+  FROM
+	v\$asm_diskgroup a RIGHT OUTER JOIN v\$asm_disk b USING (group_number)
+ORDER BY
+	a.name,b.name;
+EOF

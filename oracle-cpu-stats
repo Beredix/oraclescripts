@@ -1,0 +1,26 @@
+#!/bin/bash
+DATAFILE=$1
+DATABASES=`cut -d " " -f 2 $DATAFILE |grep -v ASM|sort|uniq`
+
+awk -v DATABASEPARAM="$DATABASES" '
+BEGIN{
+  ORS="";
+  split(DATABASEPARAM,dblist);
+  print "tid;"
+  for (c=1;c < length(dblist);c++)
+    print dblist[c]";";
+  print "\n"
+  prevtid=""
+}
+{
+  if (prevtid != $1 ) {
+    print prevtid";"
+    for (c=1;c < length(dblist);c++)
+      print data[dblist[c]]";";
+    print "\n"
+    prevtid=$1
+    delete data
+   }
+   data[$2]=$3
+}
+' $DATAFILE

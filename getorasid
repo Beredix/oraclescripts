@@ -1,0 +1,2 @@
+#!/bin/bash
+lsnrctl services|awk '/^Service/{service=$2}/ *Instance/{print service, $2}'|sed 's/[",]//g'|awk "\$1==\"$1\"{print \$2}"

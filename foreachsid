@@ -1,0 +1,9 @@
+#!/bin/bash
+sids=`getorasids`
+export AP=\'
+export DQ=\"
+for ORACLE_SID in $sids ; do
+    echo $ORACLE_SID
+    export ORACLE_SID
+    eval $*
+done

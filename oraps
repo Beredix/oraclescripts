@@ -1,0 +1,20 @@
+#!/bin/bash
+
+sqlplus -s / as sysdba <<+EOF
+set pages 9999
+btitle off
+set feedback off
+set linesize 999
+column spid format a6
+column program format a20
+column schema format a10
+column osuser format a15
+column machine format a20
+column client_identifier format a25
+select p.spid spid,s.sid,substr(regexp_replace(p.program,'oracle@.* ',''),1,20) program,trunc(pga_alloc_mem/1024) pgakb,sub
+str(s.schemaname,1,10) schema,regexp_replace(s.machine,'\.(embriq.com|shts.se|hts.int)','') machine,substr(client_identifie
+r,1,30) client_identifier
+from v\$process p
+left join v\$session s on p.addr=s.paddr
+order by to_number(p.spid);
++EOF

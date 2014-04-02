@@ -1,0 +1,17 @@
+#!/bin/bash
+# Author: Joachim Fermstad
+
+sqlplus -S / as sysasm <<EOF
+set lines 9999
+set feedback off
+column inst_id format 90
+column name format a15
+column state format a8
+column disks format 990
+column oper_min format A10
+select g.inst_id,name,state,total_mb,free_mb,USABLE_FILE_MB,(select count(*) from v\$asm_disk_stat d where g.group_number=d.group_number) disks,
+(select count(*)||':'||sum(est_minutes)||':'||max(operation) from gv\$asm_operation ao where g.inst_id=ao.inst_id and g.group_number=ao.group_number) oper_min
+from gv\$asm_diskgroup_stat g
+order by 1,2;
+EOF
+

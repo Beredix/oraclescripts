@@ -1,0 +1,2 @@
+#!/bin/bash
+lsnrctl services|awk '/ *Instance/{print $2}'|sed 's/[",]//g'|sort -u

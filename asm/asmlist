@@ -1,0 +1,12 @@
+#!/bin/ksh
+# Lists ASMdisks and their corresponding device
+for i in `/etc/init.d/oracleasm listdisks`
+do
+    v_asmdisk=`/etc/init.d/oracleasm querydisk -d $i | awk  '{print $2}'`
+    v_minor=`/etc/init.d/oracleasm querydisk -d $i | awk -F[ '{print $2}'| awk -F] '{print $1}' | awk '{print $1}'`
+    v_major=`/etc/init.d/oracleasm querydisk -d $i | awk -F[ '{print $2}'| awk -F] '{print $1}' | awk '{print $2}'`
+#v_device=`ls -la /dev | grep $v_minor | grep $v_major | awk '{print $10}'`
+    v_device=`stat -t /dev/*|awk -v minor=$v_minor -v major=$v_major '{minorhex=sprintf("%x",minor);majorhex=sprintf("%x",major);if ($10==minorhex && $11==majorhex) print $1}'`
+    echo "ASM disk $v_asmdisk based on $v_device  [$v_minor $v_major]"
+done
+

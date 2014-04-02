@@ -1,0 +1,4 @@
+#!/bin/bash
+sqlplus $1 <<+EOF
+$2
++EOF

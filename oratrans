@@ -1,0 +1,23 @@
+#!/bin/bash
+
+sqlplus -s / as sysdba <<+EOF
+set pages 9999
+btitle off
+set feedback off
+set linesize 999
+column inst_id format 99
+column spid format a6
+column sidserial format a9
+column program format a20
+column schema format a10
+column username format a10
+column osuser format a15
+column machine format a20
+column client_identifier format a30
+select s.inst_id,s.sid||','||s.serial# sidserial,start_time,s.username,s.machine,substr(s.program,1,20) program,s.client_id
+entifier
+from gv\$transaction t
+join gv\$session s on t.inst_id=s.inst_id and t.ses_addr=s.saddr
+order by start_time;
++EOF
+
